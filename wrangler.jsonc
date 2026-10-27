@@ -1,6 +1,6 @@
 {
   "name": "mybox",
-  "main": "worker.js",
+  "main": "_worker.js",
   "compatibility_date": "2026-10-01",
   "d1_databases": [
     {
