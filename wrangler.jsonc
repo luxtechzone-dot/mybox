@@ -1,0 +1,12 @@
+{
+  "name": "mybox",
+  "main": "worker.js",
+  "compatibility_date": "2026-10-01",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "sitedb",
+      "database_id": "771b47bf-6af0-41f8-b805-791c704063d2"
+    }
+  ]
+}
