@@ -32,7 +32,10 @@ const DP = {
   contact: '', links: [],
 };
 const col = (v, d) => (/^#[0-9a-f]{6}$/i.test(v) ? v : d);
-const str = (v, n, d = '') => (typeof v === 'string' ? v.trim().slice(0, n) : d);
+const SC_FROM = '\u1d00\u0299\u1d04\u1d05\u1d07\ua730\u0262\u029c\u026a\u1d0a\u1d0b\u029f\u1d0d\u0274\u1d0f\u1d18\u01eb\u0280\ua731\u1d1b\u1d1c\u1d20\u1d21\u028f\u1d22';
+const SC_TO = 'ABCDEFGHIJKLMNOPQRSTUVWYZ';
+const norm = (s) => [...s].map((ch) => { const i = SC_FROM.indexOf(ch); return i < 0 ? ch : SC_TO[i]; }).join('');
+const str = (v, n, d = '') => (typeof v === 'string' ? norm(v.trim().slice(0, n)) : d);
 const num = (v, a, b, d) => { v = parseFloat(v); return isNaN(v) ? d : Math.min(Math.max(v, a), b); };
 const url = (v) => { v = str(v, 500); return okUrl(v) ? v : ''; };
 const one = (v, arr, d) => (arr.includes(v) ? v : d);
@@ -186,13 +189,15 @@ a{color:inherit;text-decoration:none}
 .av{width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.6);margin-bottom:14px}
 .pg h1{font-size:24px;margin-bottom:6px}
 .bio{opacity:.9;margin-bottom:22px;font-size:15px;white-space:pre-line}
-.lk{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 14px;margin:0 0 12px;border-radius:var(--br);font-weight:600;position:relative;overflow:hidden;transition:transform .15s;font-size:15px}
+.lk{--is:40px;display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 14px;margin:0 0 12px;border-radius:var(--br);font-weight:600;position:relative;overflow:hidden;transition:transform .15s;font-size:15px}
 .lk:active{transform:scale(.98)}
-.lk span{flex:1;text-align:center}
-.lk img{width:40px;height:40px;border-radius:calc(var(--br) * .6);object-fit:cover}
-.sz-s .lk{min-height:44px;font-size:13px;padding:6px 12px}.sz-s .lk img{width:30px;height:30px}
-.sz-l .lk{min-height:72px;font-size:18px;padding:10px 18px}.sz-l .lk img{width:54px;height:54px}
+.lk span{flex:1;text-align:center;padding:0 12px;word-break:break-word}
+.lk.hi span{padding-left:calc(var(--is) + 22px);padding-right:calc(var(--is) + 22px)}
+.lk img{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:var(--is);height:var(--is);border-radius:calc(var(--br) * .6);object-fit:cover}
+.sz-s .lk{--is:30px;min-height:44px;font-size:13px;padding:6px 12px}
+.sz-l .lk{--is:54px;min-height:72px;font-size:18px;padding:10px 18px}
 .al-left .lk span{text-align:left}.al-right .lk span{text-align:right}.al-center .lk span{text-align:center}
+.al-left .lk.hi span{padding-right:12px}.al-right .lk.hi span{padding-right:12px}
 .w-narrow .lk{width:78%;margin-left:auto;margin-right:auto}
 .an .lk:hover{transform:translateY(-3px) scale(1.02)}
 .bs-fill .lk{background:var(--b1);color:var(--bt)}
@@ -299,7 +304,7 @@ function R(c,root,pv){
  var h='';
  if(c.avatar)h+='<img class="av" src="'+E(c.avatar)+'" alt="">';
  h+='<h1>'+E(c.title)+'</h1>'+(c.bio?'<p class="bio">'+E(c.bio)+'</p>':'');
- c.links.forEach(function(l){if(l.on===false)return;h+='<a class="lk'+(l.pr?' pr':'')+'" href="'+(pv?'#':'/l/'+l.id)+'">'+(l.icon?'<img src="'+E(l.icon)+'" alt="" loading="lazy">':'')+'<span>'+E(l.label)+'</span></a>';});
+ c.links.forEach(function(l){if(l.on===false)return;h+='<a class="lk'+(l.pr?' pr':'')+(l.icon?' hi':'')+'" href="'+(pv?'#':'/l/'+l.id)+'">'+(l.icon?'<img src="'+E(l.icon)+'" alt="" loading="lazy">':'')+'<span>'+E(l.label)+'</span></a>';});
  if(c.posts.btn)h+='<a class="lk" href="'+(pv?'#':'/posts')+'"><span>'+E(c.posts.label)+'</span></a>';
  if(c.latest&&c.latest.length)h+='<h2 class="sh">'+E(c.posts.title)+'</h2><div class="pgrid">'+c.latest.map(PC).join('')+'</div>';
  h+='<div class="ft"><a href="'+(pv?'#':'/terms')+'">Terms &amp; Conditions</a> &middot; <a href="'+(pv?'#':'/privacy')+'">Privacy Policy</a></div>';
